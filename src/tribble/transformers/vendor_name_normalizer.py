@@ -1,5 +1,5 @@
 import pandas as pd
-import string
+import string, re
 from tribble.transformers import base
 
 class VendorNameNormalizer(base.BaseTransform):
@@ -10,19 +10,21 @@ class VendorNameNormalizer(base.BaseTransform):
         vendor_name = vendor_name.upper()
         return vendor_name
 
-    _TRANSLATOR = str.maketrans('', '', string.punctuation)
-
+    @staticmethod
+    def _remove_punctuation(vendor_name: str) -> str:
+        vendor_name = vendor_name.translate(str.maketrans('', '', string.punctuation))
+        return vendor_name
 
     @staticmethod
-    def _remove_punctuation_from_vendor_name(row: pd.Series) -> pd.Series:
-        if row['vendor_name'] is not None:
-            row['vendor_name'] = row['vendor_name'].translate(_TRANSLATOR)
-        return row
-
-    @staticmethod
-    def _organization_identifiers(row: pd.Series) -> pd.Series:
-        pass
+    def _organization_identifiers(vendor_name: str) -> str:
+        org_idents = ['LLC', 'LTD', 'INC', 'CPA', 'LLP', 'ULC', 'CORP']
+        for ident in org_idents:
+            regex = '\s+{}\W*'.format(ident)
+            vendor_name = re.sub(regex, '', vendor_name)
+        return vendor_name
 
     def apply(self, data: pd.DataFrame) -> pd.DataFrame:
         data['vendor_name'] = data['vendor_name'].apply(self._uppercase)
+        data['vendor_name'] = data['vendor_name'].apply(self._remove_punctuation)
+        data['vendor_name'] = data['vendor_name'].apply(self._organization_identifiers)
         return data
