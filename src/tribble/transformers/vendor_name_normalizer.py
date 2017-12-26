@@ -1,15 +1,14 @@
 import pandas as pd
-import re, string
+import string
 from tribble.transformers import base
 
 class VendorNameNormalizer(base.BaseTransform):
     """Normalizes all Vendor names by converting to uppercase characters, removing punctuation and organization identifiers such as inc, or llc."""
 
     @staticmethod
-    def _uppercase_vendor_name(row: pd.Series) -> pd.Series:
-        if row['vendor_name'] is not None:
-            row['vendor_name'] = row['vendor_name'].upper()
-        return row
+    def _uppercase(vendor_name: str) -> str:
+        vendor_name = vendor_name.upper()
+        return vendor_name
 
     _TRANSLATOR = str.maketrans('', '', string.punctuation)
 
@@ -25,4 +24,5 @@ class VendorNameNormalizer(base.BaseTransform):
         pass
 
     def apply(self, data: pd.DataFrame) -> pd.DataFrame:
-        pass
+        data['vendor_name'] = data['vendor_name'].apply(self._uppercase)
+        return data
