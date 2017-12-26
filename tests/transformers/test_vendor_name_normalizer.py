@@ -30,6 +30,13 @@ def test_organization_designation_removal() -> None:
         {'id': 1, 'vendor_name': 'IBM CANADA'},
         {'id': 2, 'vendor_name': 'NISHA TECHNOLOGIES'},
         {'id': 3, 'vendor_name': 'SHREDIT INTERNATIONAL'},
-        {'id': 4, 'vendor_name': 'D  D OILFIELD RENTALS'},
-        {'id': 5, 'vendor_name': 'DELOITTE  TOUCHE'},
+        {'id': 4, 'vendor_name': 'D D OILFIELD RENTALS'},
+        {'id': 5, 'vendor_name': 'DELOITTE TOUCHE'},
     ]
+
+def test_whitespace_cleanup() -> None:
+    data = pd.DataFrame([
+        {'id': 1, 'vendor_name': '        IBM            CANADA          '}
+    ])
+    output = vendor_name_normalizer.VendorNameNormalizer().apply(data)
+    assert output.to_dict('records') == [{'id': 1, 'vendor_name': 'IBM CANADA'}]

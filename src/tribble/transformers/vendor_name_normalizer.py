@@ -23,8 +23,15 @@ class VendorNameNormalizer(base.BaseTransform):
             vendor_name = re.sub(regex, '', vendor_name)
         return vendor_name
 
+    @staticmethod
+    def _whitespace_clean_up(vendor_name: str) -> str:
+        vendor_name = vendor_name.strip()
+        vendor_name = re.sub('\s{2,}', ' ', vendor_name)
+        return vendor_name
+
     def apply(self, data: pd.DataFrame) -> pd.DataFrame:
         data['vendor_name'] = data['vendor_name'].apply(self._uppercase)
         data['vendor_name'] = data['vendor_name'].apply(self._remove_punctuation)
         data['vendor_name'] = data['vendor_name'].apply(self._organization_identifiers)
+        data['vendor_name'] = data['vendor_name'].apply(self._whitespace_clean_up)
         return data
