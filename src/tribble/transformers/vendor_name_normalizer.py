@@ -11,11 +11,18 @@ class VendorNameNormalizer(base.BaseTransform):
             row['vendor_name'] = row['vendor_name'].upper()
         return row
 
+    _TRANSLATOR = str.maketrans('', '', string.punctuation)
+
+
     @staticmethod
     def _remove_punctuation_from_vendor_name(row: pd.Series) -> pd.Series:
         if row['vendor_name'] is not None:
-            translator = str.maketrans('', '', string.punctuation)
-            row['vendor_name'] = row['vendor_name'].translate(translator)
+            row['vendor_name'] = row['vendor_name'].translate(_TRANSLATOR)
         return row
 
+    @staticmethod
+    def _organization_identifiers(row: pd.Series) -> pd.Series:
+        pass
+
     def apply(self, data: pd.DataFrame) -> pd.DataFrame:
+        pass
