@@ -1,9 +1,11 @@
+import re
+import string
 import pandas as pd
-import string, re
 from tribble.transformers import base
 
 class VendorNameNormalizer(base.BaseTransform):
-    """Normalizes all Vendor names by converting to uppercase characters, removing punctuation and organization identifiers such as inc, or llc."""
+    """Normalizes all Vendor names by converting to uppercase characters,
+    removing punctuation and organization identifiers such as inc, or llc."""
 
     @staticmethod
     def _uppercase(vendor_name: str) -> str:
@@ -19,7 +21,7 @@ class VendorNameNormalizer(base.BaseTransform):
     def _organization_identifiers(vendor_name: str) -> str:
         org_idents = ['LLC', 'LTD', 'INC', 'CPA', 'LLP', 'ULC', 'CORP']
         for ident in org_idents:
-            regex = '\s+{}\W*$'.format(ident)
+            regex = r'\s+{}\W*$'.format(ident)
             vendor_name = re.sub(regex, '', vendor_name)
         return vendor_name
 
