@@ -24,6 +24,7 @@ def test_organization_designation_removal() -> None:
         {'id': 3, 'vendor_name': 'SHRED-IT INTERNATIONAL ULC'},
         {'id': 4, 'vendor_name': 'D & D OILFIELD RENTALS CORP'},
         {'id': 5, 'vendor_name': 'DELOITTE & TOUCHE LLP'},
+        {'id': 6, 'vendor_name': ' INCO CORP'}
     ])
     output = vendor_name_normalizer.VendorNameNormalizer().apply(data)
     assert sorted(output.to_dict('records'), key=lambda row: row['id']) == [
@@ -32,6 +33,7 @@ def test_organization_designation_removal() -> None:
         {'id': 3, 'vendor_name': 'SHREDIT INTERNATIONAL'},
         {'id': 4, 'vendor_name': 'D D OILFIELD RENTALS'},
         {'id': 5, 'vendor_name': 'DELOITTE TOUCHE'},
+        {'id': 6, 'vendor_name': 'INCO'}
     ]
 
 def test_whitespace_cleanup() -> None:
