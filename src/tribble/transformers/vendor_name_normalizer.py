@@ -1,5 +1,4 @@
 import re
-from string import punctuation
 import pandas as pd
 from tribble.transformers import base
 
@@ -14,7 +13,7 @@ class VendorNameNormalizer(base.BaseTransform):
 
     @staticmethod
     def _remove_punctuation(vendor_name: str) -> str:
-        vendor_name = vendor_name.translate(str.maketrans('', '', punctuation))
+        vendor_name = vendor_name.translate(str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'))
         return vendor_name
 
     @staticmethod
